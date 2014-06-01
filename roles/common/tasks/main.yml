@@ -119,12 +119,14 @@
     - cabal install -j cabal-install
 
 - name: Newest Cabal is symlinked to /usr/bin/cabal.
-  sudo: yes
-  remote_user: pair
   file: src=/home/pair/.cabal/bin/cabal
         dest=/usr/bin/cabal
         force=yes
         state=link
+
+- name: pair has cabal permissions.
+  sudo: yes
+  command: chown pair /usr/bin/cabal
 
 - name: Haskell dev tools are installed.
   command: "{{item}}"
