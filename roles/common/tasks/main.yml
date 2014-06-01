@@ -85,11 +85,6 @@
     - git submodule init
     - git submodule update
 
-- name: .dotfiles submodules are up-to-date.
-  remote_user: pair
-  command: git submodule update
-           chdir=/home/pair/.dotfiles
-
 - name: dotfiles are linked appropriately.
   remote_user: pair
   file: src=/home/pair/.dotfiles/{{ item.src }}
@@ -119,6 +114,7 @@
     - cabal install -j cabal-install
 
 - name: Newest Cabal is symlinked to /usr/bin/cabal.
+  sudo: yes
   file: src=/home/pair/.cabal/bin/cabal
         dest=/usr/bin/cabal
         force=yes
