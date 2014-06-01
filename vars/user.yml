@@ -1,0 +1,33 @@
+# Select a Debian mirror from http://www.debian.org/mirror/list.  Omit the 
+# '/debian/' at the end. Ex:
+#
+# debian_mirror: ftp.au.debian.org 
+debian_mirror: FIXME
+
+# The crypted password for the pair user.  Gotten via, ex:
+#
+# $ echo 'import crypt,getpass; print crypt.crypt(getpass.getpass(), "$6$YOURSALT")' | python -
+pair_crypted_password: FIXME
+
+# Path to your public key.  Probably:
+#
+# ~/.ssh/id_rsa.pub
+my_public_key_path: ~/.ssh/id_rsa.pub
+
+# A dotfiles repo.  You can change this to suit your own needs, but you'll have
+# to mess with a lot of stuff.
+dotfiles_repo: jtobin/.dotfiles.git
+
+# Dev environment packages that you want to install via apt.  Change this to
+# meet your own needs.
+dev_deps:
+  - haskell-platform
+  - liblapack-dev
+  - ghc-doc
+  - ragel
+  - flex
+  - bison
+  - llvm
+  - valgrind
+  - libgsl0-dev
+
