@@ -120,6 +120,7 @@
 
 - name: Newest Cabal is symlinked to /usr/bin/cabal.
   sudo: yes
+  remote_user: pair
   file: src=/home/pair/.cabal/bin/cabal
         dest=/usr/bin/cabal
         force=yes
@@ -127,6 +128,7 @@
 
 - name: Haskell dev tools are installed.
   command: "{{item}}"
+  remote_user: pair
   with_items:
     - cabal install -j hlint
     - cabal install -j ghc-mod
