@@ -1,7 +1,8 @@
 ---
 - name: Pairing server.
   hosts: all
-  include: vars/user.yml
+  vars_files:
+    - vars/user.yml
   roles:
     - common
 
