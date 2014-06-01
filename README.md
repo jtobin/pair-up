@@ -56,12 +56,13 @@ place:
 * a user named 'pair', with the specified crypted password
 * a running tmux session called 'pair'
 
-For anyone to join in the fun, all they need to do is add their public key to
-`authorized_keys` (password authentication is enabled):
+For anyone to join in the fun, all you need to do is add their public key to
+`authorized_keys`:
 
-    $ ssh-copy-id pair@my-ec2-instance-public-dns
+    $ cat id_rsa.pub | ssh pair@my-ec2-instance-public-dns \
+        "cat >> /home/pair/.ssh/authorized_keys"
 
-And then connect via ssh or mosh:
+And then have them connect via ssh or mosh:
 
     $ ssh -t pair@my-ec2-instance-public-dns tmux attach -t pair
     $ mosh pair@my-ec2-instance-public-dns -- tmux attach -t pair

@@ -97,10 +97,10 @@
     - { src: 'vim', dest: '.vim' }
     - { src: 'tmux.conf', dest: '.tmux.conf' }
 
-- name: tmux status-bg is green.
+- name: tmux status-bg is blue.
   remote_user: pair
   lineinfile: dest=/home/pair/.tmux.conf regexp="status-bg"
-              line="set -g status-bg green" state=present
+              line="set -g status-bg blue" state=present
 
 - name: vimproc.vim is installed.
   remote_user: pair
