@@ -32,10 +32,13 @@ vagrant.pem` it.  Again you can handle this via the AWS CLI with
     $ aws ec2 create-key-pair --key-name vagrant > vagrant.pem \
         && chmod 400 vagrant.pem
 
-Set the variables in `vars/user.yml` and `Vagrantfile` to match your personal
-config.  Create a crypted password for the pair user by something like
+Set the variables in `vars/user.yml` and possibly `Vagrantfile` to match your
+personal config.  Create a crypted password for the pair user by something like
 
     $ echo 'import crypt,getpass; print crypt.crypt(getpass.getpass(), "$6$YOURSALT")' | python -
+
+You'll need to provide your AWS access key and AWS secret keys in the
+environment as 'AWS\_ACCESS\_KEY' and 'AWS\_SECRET\_KEY' respectively.
 
 Launch the instance via:
 

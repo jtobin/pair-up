@@ -10,9 +10,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider :aws do |aws, override|
     aws.ami               = 'ami-edc75cd7'   # change me if you'd like
     aws.region            = 'ap-southeast-2' # ditto
-    aws.instance_type     = 't1.micro'       # ditto
-    aws.access_key_id     = FIXME
-    aws.secret_access_key = FIXME
+    aws.instance_type     = 'c3.large'       # ditto
+    aws.access_key_id     = ENV['AWS_ACCESS_KEY']
+    aws.secret_access_key = ENV['AWS_SECRET_KEY']
     aws.keypair_name      = 'vagrant'
     aws.security_groups   = [ 'vagrant' ]
 
@@ -21,7 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "provision.yml"
+    ansible.playbook      = "provision.yml"
   end
  
 end
