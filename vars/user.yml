@@ -18,16 +18,38 @@ my_public_key_path: ~/.ssh/id_rsa.pub
 # to mess with a lot of stuff.
 dotfiles_repo: jtobin/.dotfiles.git
 
-# Dev environment packages that you want to install via apt.  Change this to
-# meet your own needs.
-dev_deps:
-  - haskell-platform
-  - liblapack-dev
-  - ghc-doc
+# General (role-independent) dependencies.
+general_deps:
+  - sudo
+  - vim
+  - build-essential
+  - tmux
+  - git
+  - mosh
   - ragel
   - flex
   - bison
   - llvm
   - valgrind
+  - fail2ban
+  - zile
+  - exuberant-ctags
+  - ack-grep
+  - libcurl4-openssl-dev
+  - liblapack-dev
   - libgsl0-dev
+
+python_deps:
+  - ipython
+
+haskell_deps:
+  - ghc
+  - ghc-doc
+  - alex
+  - happy
+  - zlib1g-dev
+  - cabal-install
+
+r_deps:
+  - r-base
 

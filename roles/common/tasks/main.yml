@@ -1,7 +1,9 @@
 ---
 - name: apt sources are updated.
   sudo: yes
-  apt: update_cache=yes cache_valid_time=3600
+  apt:
+    update_cache=yes
+    cache_valid_time=3600
 
 - name: Wheezy sources are absent.
   sudo: yes
@@ -16,67 +18,74 @@
 
 - name: Sid sources are present.
   sudo: yes
-  apt_repository: repo="{{item}}" state=present
+  apt_repository:
+    repo="{{item}}"
+    state=present
   with_items:
     - deb {{ debian_mirror }}/debian/ sid main
     - deb-src {{ debian_mirror }}/debian/ sid main
 
 - name: apt sources are upgraded.
   sudo: yes
-  apt: upgrade=dist cache_valid_time=3600
+  apt:
+    upgrade=dist
+    cache_valid_time=3600
 
 - name: General dependencies are installed.
   sudo: yes
-  apt: name={{ item }} force=yes update_cache=yes force=yes
+  apt:
+    name={{ item }}
+    force=yes
+    update_cache=yes
+    cache_valid_time=3600
+    force=yes
   with_items:
-    - sudo
-    - vim
-    - fail2ban
-    - zile
-    - exuberant-ctags
-    - ack-grep
-    - mosh
-    - libcurl4-openssl-dev
-    - ipython
-    - tmux
-    - git
-    - build-essential
-
-- name: Dev dependencies are installed.
-  sudo: yes
-  apt: name={{ item }} force=yes update_cache=yes force=yes
-  with_items: dev_deps
+    general_deps
 
 - name: pair is a sudoer.
   sudo: yes
-  user: name=pair groups=sudo append=yes state=present shell=/bin/bash
-        password={{ pair_crypted_password }}
+  user:
+    name=pair
+    groups=sudo
+    append=yes
+    state=present
+    shell=/bin/bash
+    password={{ pair_crypted_password }}
 
 - name: pair has an authorized key.
   sudo: yes
-  authorized_key: user=pair
-                  key="{{item}}"
-                  state=present
+  authorized_key:
+    user=pair
+    key="{{item}}"
+    state=present
   with_file:                      
     - "{{ my_public_key_path }}"
 
 - name: Password authentication is permitted.
   sudo: yes
-  lineinfile: dest=/etc/ssh/sshd_config regexp="^#*PasswordAuthentication"
-              line="PasswordAuthentication yes" state=present
-  notify: Restart ssh
+  lineinfile:
+    dest=/etc/ssh/sshd_config
+    regexp="^#*PasswordAuthentication"
+    line="PasswordAuthentication yes"
+    state=present
+  notify:
+    - restart sshd
 
 - name: ssh-agent forwarding is not allowed.
   sudo: yes
-  lineinfile: dest=/etc/ssh/sshd_config
-              line="AllowAgentForwarding no" state=present
-  notify: Restart ssh
+  lineinfile:
+    dest=/etc/ssh/sshd_config
+    line="AllowAgentForwarding no"
+    state=present
+  notify:
+    - restart sshd
 
 - name: .dotfiles repo is present and up-to-date.
   remote_user: pair
-  git: repo=https://github.com/jtobin/.dotfiles
-       dest=/home/pair/.dotfiles
-       accept_hostkey=yes
+  git:
+    repo=https://github.com/jtobin/.dotfiles
+    dest=/home/pair/.dotfiles
+    accept_hostkey=yes
 
 - name: .dotfiles submodules are initialized and up to date.
   remote_user: pair
@@ -87,10 +96,11 @@
 
 - name: dotfiles are linked appropriately.
   remote_user: pair
-  file: src=/home/pair/.dotfiles/{{ item.src }}
-        dest=/home/pair/{{ item.dest }}
-        force=yes
-        state=link
+  file:
+    src=/home/pair/.dotfiles/{{ item.src }}
+    dest=/home/pair/{{ item.dest }}
+    force=yes
+    state=link
   with_items:
     - { src: 'bashrc', dest: '.bashrc' }
     - { src: 'vimrc', dest: '.vimrc' }
@@ -99,50 +109,15 @@
 
 - name: tmux status-bg is blue.
   remote_user: pair
-  lineinfile: dest=/home/pair/.tmux.conf regexp="status-bg"
-              line="set -g status-bg blue" state=present
+  lineinfile:
+    dest=/home/pair/.tmux.conf
+    regexp="status-bg"
+    line="set -g status-bg blue"
+    state=present
 
 - name: vimproc.vim is installed.
   remote_user: pair
   command: make chdir=/home/pair/.dotfiles/vim/bundle/vimproc
-
-- name: Cabal cache is updated and latest version is installed.
-  remote_user: pair
-  command: "{{item}}"
-  with_items:
-    - cabal update
-    - cabal install -j cabal-install
-
-- name: Newest Cabal is symlinked to /usr/bin/cabal.
-  sudo: yes
-  file: src=/home/pair/.cabal/bin/cabal
-        dest=/usr/bin/cabal
-        force=yes
-        state=link
-
-- name: pair has cabal permissions.
-  sudo: yes
-  command: chown pair /usr/bin/cabal
-
-- name: Haskell dev tools are installed.
-  command: "{{item}}"
-  remote_user: pair
-  with_items:
-    - cabal install -j hlint
-    - cabal install -j ghc-mod
-    - cabal install -j pointfree
-    - cabal install -j hasktags
-
-- name: ipython profile exists.
-  remote_user: pair
-  command: ipython profile create
-
-- name: ipython doesn't confirm exit.
-  remote_user: pair
-  lineinfile: dest=/home/pair/.ipython/profile_default/ipython_config.py
-              regexp=".*confirm_exit"
-              line="c.TerminalInteractiveShell.confirm_exit = False"
-              state=present
 
 - name: tmux session exists.
   remote_user: pair

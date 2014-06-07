@@ -5,4 +5,5 @@
     - vars/user.yml
   roles:
     - common
+    - developer
 
